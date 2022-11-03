@@ -1,3 +1,4 @@
+from zipfile import ZipFile
 import streamlit as st
 import pickle
 import pandas as pd
@@ -6,8 +7,12 @@ plt.style.use('fivethirtyeight')
 import numpy as np
 import io
 import json
-movies = pd.read_csv('credits.csv')
-credits = pd.read_csv('movies.csv')
+with ZipFile("movies.csv.zip", 'r') as zObject:
+    zObject.extractall()
+with ZipFile("credits.csv.zip", 'r') as zObject:
+    zObject.extractall()
+movies = pd.read_csv('/content/drive/MyDrive/AITTA PBL/movies.csv')
+credits = pd.read_csv('/content/drive/MyDrive/AITTA PBL/credits.csv')
 # changing the genres column from json to string
 movies['genres'] = movies['genres'].apply(json.loads)
 for index,i in zip(movies.index,movies['genres']):
