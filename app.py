@@ -142,7 +142,7 @@ movies['keywords'] = movies['keywords'].str.split(',')
 movies['words_bin'] = movies['keywords'].apply(lambda x: binary(x))
 movies = movies[(movies['vote_average']!=0)] 
 movies = movies[movies['director']!='']
-#from scipy import spatial
+from scipy import spatial
 
 def Similarity(movieId1, movieId2):
     a = movies.iloc[movieId1]
