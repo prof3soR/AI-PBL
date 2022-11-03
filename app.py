@@ -11,8 +11,8 @@ with ZipFile("movies.csv.zip", 'r') as zObject:
     zObject.extractall()
 with ZipFile("credits.csv.zip", 'r') as zObject:
     zObject.extractall()
-movies = pd.read_csv('/content/drive/MyDrive/AITTA PBL/movies.csv')
-credits = pd.read_csv('/content/drive/MyDrive/AITTA PBL/credits.csv')
+movies = pd.read_csv('movies.csv')
+credits = pd.read_csv('credits.csv')
 # changing the genres column from json to string
 movies['genres'] = movies['genres'].apply(json.loads)
 for index,i in zip(movies.index,movies['genres']):
