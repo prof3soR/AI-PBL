@@ -1,5 +1,5 @@
-from zipfile import ZipFile
 import streamlit as st
+from zipfile import ZipFile
 import pickle
 import pandas as pd
 import matplotlib.pyplot as plt
@@ -173,6 +173,7 @@ def poster(id):
   Movie_data=r.get('https://api.themoviedb.org/3/movie/{}?api_key=692ef1307f53ce56d5b22b40fdd666c4&language=en-US'.format(id)).json()
   return "https://image.tmdb.org/t/p/w500/"+Movie_data['poster_path']
 import operator
+from itertools import cycle
 def predict_score(name):
     new_movie = movies[movies['original_title'].str.contains(name)].iloc[0].to_frame().T
     print('Selected Movie: ',new_movie.original_title.values[0])
@@ -191,22 +192,25 @@ def predict_score(name):
             neighbors.append(distances[x])
         return neighbors
 
-    K = 10
+    K = 12
     neighbors = getNeighbors(new_movie, K)
     
     print('\nRecommended Movies: \n')
-
+    posterlist=[]
+    titlelist=[]
     for neighbor in neighbors:
-        st.image(poster(movies.iloc[neighbor[0]][5]))
-        st.write(movies.iloc[neighbor[0]][0]," | Genres: ",str(movies.iloc[neighbor[0]][1]).strip('[]').replace(' ','')," | Rating: ",str(movies.iloc[neighbor[0]][2]))
+        posterlist.append(poster(movies.iloc[neighbor[0]][5]))
+        titlelist.append(movies.iloc[neighbor[0]][0]+"\n Genres: "+str(movies.iloc[neighbor[0]][1]).strip('[]').replace(' ','')+"\n Rating: "+str(movies.iloc[neighbor[0]][2]))
+    
+    
+    cols = cycle(st.columns(4)) 
+    for i, img in enumerate(posterlist):
+        next(cols).image( posterlist[i], width=150, caption=titlelist[i])
 st.title("Movie suggestion page PBL")
 
 
-name= st.selectbox(
-     'Hey there! please enter the title of your favorite movie : ',MoviesList)
+name= st.selectbox('Hey there! please enter the title of your favorite movie : ',MoviesList)
 
 st.write('You selected:', name)
 if st.button('Suggest'):
-     predict_score(name)
-
-
+        predict_score(name)
